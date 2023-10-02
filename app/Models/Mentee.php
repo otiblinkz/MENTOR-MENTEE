@@ -13,6 +13,9 @@ class Mentee extends Model
 
     protected $guarded = [];
 
+    protected $fillable = [
+        'user_id','mentor_id'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -21,5 +24,14 @@ class Mentee extends Model
     public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
+    }
+
+    public function mentorlist(): HasMany
+    {
+        return $this->hasMany(User::class,'id','mentor_id');
+    }
+    public function menteelist(): HasMany
+    {
+        return $this->hasMany(User::class,'id','user_id');
     }
 }

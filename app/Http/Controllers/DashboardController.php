@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Mentee;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -18,13 +19,42 @@ class DashboardController extends Controller
     /**
      * Display the dashboard.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+
+        $isMentor = Mentor::where('user_id',$request->user()->id)->exists();
+        if($isMentor){
+            $isMent = true;
+
+        }else{
+            $isMent = false;
+        }
+
+        $mentees = Mentee::where('mentor_id',$request->user()->id)
+            ->with('menteelist')->get();
         // get a list of mentors with their sessions and mentees
-        $mentors = Mentor::with(['user', 'sessions.mentee.user', 'sessions.mentor', 'skills'])->get();
+        $mentors = Mentor::with(['user', 'sessions.mentee.user', 'sessions.mentor', 'skills'])->orderBy('created_at','DESC')
+        ->get();
 
 
         return Inertia::render('Dashboard', [
+            'mentors' => $mentors,
+            'is_ment' => $isMent,
+            'mentees' => $mentees,
+            'profileComplete' => $this->userCompletedProfile()
+        ]);
+    }
+
+    public function mentorList(Request $request): Response
+    {
+
+        $mentors = Mentee::where('user_id',$request->user()->id)
+        ->with('mentorlist')->get();
+        // get a list of mentors with their sessions and mentees
+        // $mentors = User::whereIn('id',$mentorslist)->get();
+
+
+        return Inertia::render('MentorList', [
             'mentors' => $mentors,
             'profileComplete' => $this->userCompletedProfile()
         ]);

@@ -43,6 +43,12 @@ const layoutuser = computed(() => page.props.auth.user)
                                     Dashboard
                                 </NavLink>
                             </div>
+
+                            <div v-if="!layoutuser.is_mentor" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('mentorlist')" :active="route().current('mentorlist')">
+                                    Mentor List
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">

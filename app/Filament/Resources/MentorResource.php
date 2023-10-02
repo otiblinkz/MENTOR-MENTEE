@@ -36,7 +36,6 @@ class MentorResource extends Resource
                     Select::make('user_id')
                                 ->label('Please Select a user to turn to a mentor')
                                 ->options(User::with(['mentee', 'mentor'])
-                                ->whereDoesntHave('mentee')
                                 ->whereDoesntHave('mentor')
                                 ->get()->pluck('email', 'id'))
                 ])

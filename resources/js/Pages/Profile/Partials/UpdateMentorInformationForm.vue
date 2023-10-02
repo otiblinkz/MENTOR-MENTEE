@@ -59,7 +59,7 @@ const submit = () => {
             </div>
 
             <div>
-                <InputLabel for="company" value="Company" />
+                <InputLabel for="company" value="Institution" />
 
                 <TextInput
                     id="company"
@@ -72,7 +72,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.company" />
             </div>
 
-            <div>
+            <!-- <div>
                 <InputLabel for="hourly_rate" value="Hourly Rate (in USD)" />
 
                 <NumberInput
@@ -84,9 +84,9 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.hourly_rate" />
-            </div>
+            </div> -->
 
-            <div>
+            <!-- <div>
                 <InputLabel for="skills" value="Skills" />
 
                 <SkillsInput
@@ -96,7 +96,7 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.skills" />
-            </div>
+            </div> -->
 
             <div class="flex items-center gap-4">
                 <PrimaryButton :disabled="form.processing">Save</PrimaryButton>

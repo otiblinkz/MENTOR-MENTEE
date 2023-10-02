@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import MentorCards from '@/Components/MentorCards.vue';
+import MenteeCardList from '@/Components/MenteeCardList.vue';
 import { Head } from '@inertiajs/vue3';
 // import { defineProps } from 'vue';
 import { Link } from '@inertiajs/vue3';
@@ -11,6 +12,13 @@ const props = defineProps({
         required: true,
     },
     profileComplete: {
+        type: Boolean,
+        required: true,
+    },
+    is_ment: {
+        required:true,
+    },
+    mentees:{
         type: Boolean,
         required: true,
     }
@@ -33,12 +41,12 @@ const props = defineProps({
 
                 </div>
 
-                <div v-if="profileComplete" class="mt-6">
+                <div v-if="!is_ment" class="mt-6">
                     <h1 class="text-2xl font-bold mb-4">Mentor Recommendations</h1>
                     <MentorCards :mentors="mentors"/>
                 </div>
 
-                <div v-else class="flex mt-6 justify-center items-center">
+                <div v-else-if="!profileComplete" class="flex mt-6 justify-center items-center">
                     <div class="bg-white p-8 rounded shadow-lg">
                         <h1 class="text-2xl font-bold mb-4">Incomplete Profile</h1>
                         <p>Please Complete your Profile to see Mentors Recommendations</p>
@@ -49,6 +57,11 @@ const props = defineProps({
                         Go to Profile
                         </Link>
                     </div>
+                </div>
+                <div v-else class="mt-6">
+                    <h1 class="text-2xl font-bold mb-4">Mentee List</h1>
+                    <!-- {{ mentees }} -->
+                    <MenteeCardList :mentors="mentees"/>
                 </div>
 
 

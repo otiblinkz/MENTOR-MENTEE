@@ -38,6 +38,15 @@ class ProfileController extends Controller
             $user->mentee->with(['sessions.mentee.user']);
         }
 
+        $amIMentee = Mentee::where('user_id',$user->id)
+        ->where('mentor_id',$request->user()->id)->first();
+
+        if($amIMentee){
+            $mine = $amIMentee->status;
+        }else{
+            $mine = 3;
+        }
+
         $checkIfMenteeAlready = Mentee::where('user_id',$request->user()->id)
         ->where('mentor_id',$user->id)->first();
 
@@ -47,7 +56,7 @@ class ProfileController extends Controller
             $is_mentor = 2;
         }
 
-        $getMenteeList = Mentee::where('status',0)
+        $getMenteeList = Mentee::where('status',1)
         ->where('mentor_id',$user->id)->with(['user'])->get();
 
 
@@ -57,7 +66,8 @@ class ProfileController extends Controller
             'session' => ($request->user()->mentee) ? $request->user()->mentee->load(['sessions.mentor.user']) : [],
             'mentor' => $user->load(['mentor','mentor.skills']),
             'is_mentor' => $is_mentor,
-            'mentee_list' => $getMenteeList
+            'mentee_list' => $getMenteeList,
+            'mine' => $mine
         ]);
     }
 
@@ -183,17 +193,14 @@ class ProfileController extends Controller
         $request->validate([
             'job_title' => ['nullable', 'string'],
             'company' => ['nullable', 'string'],
-            'hourly_rate' => ['nullable', 'numeric'],
-            'skills' => ['nullable', 'array'],
         ]);
 
         $mentor = $request->user()->mentor;
         $mentor->job_title = $request->job_title;
         $mentor->company = $request->company;
-        $mentor->hourly_rate = $request->hourly_rate;
         $mentor->save();
 
-        $mentor->skills()->sync(collect($request->skills)->pluck('id'));
+        // $mentor->skills()->sync(collect($request->skills)->pluck('id'));
 
         return Redirect::route('profile.edit');
     }
@@ -213,6 +220,21 @@ class ProfileController extends Controller
         $success = Mentee::create([
             'user_id' => $request->input('id'),
             'mentor_id' => $request->input('mentor')
+        ]);
+
+        if(!$success){
+            return response()->json(['success' => false]);
+        }
+        return response()->json(['success' => true]);
+
+    }
+    public function becomeMentor(Request $request){
+
+        $success = Mentee::where([
+            'user_id' => $request->input('id'),
+            'mentor_id' => $request->input('mentor')
+        ])->update([
+            'status' => 1
         ]);
 
         if(!$success){

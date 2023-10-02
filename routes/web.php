@@ -19,6 +19,8 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/mentor_list', [DashboardController::class, 'mentorList'])->name('mentorlist');
+
     // session.store endpoint is only for demo purposes
     Route::post('/session', [DashboardController::class, 'store'])->name('session.store');
 
@@ -37,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/mentor/information', [ProfileController::class, 'updateMentorInformation'])->name('profile.update.mentor.information');
 
     Route::get('/send/request', [ProfileController::class, 'becomeMentee'])->name('request.to.become.mentee');
+    Route::get('/accept/request', [ProfileController::class, 'becomeMentor'])->name('accept.to.become.mentor');
 
     Route::get('/skills', [ProfileController::class, 'showSkills'])->name('skills.index');
 });

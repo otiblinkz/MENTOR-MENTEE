@@ -26,6 +26,9 @@ defineProps({
         type: Object,
         required: true,
     },
+    mine: {
+        required: true,
+    },
 });
 
 const requestData = {
@@ -41,7 +44,21 @@ const sendRequest = (userId,mentorId) => {
         axios.get(route('request.to.become.mentee')+"?id="+userId+"&&mentor="+mentorId).then(response => {
             // console.log(response.data.success);
             requestData.requestSent = response.data.success ?? false;
-            requestData.buttonText =  'Request to ';
+            window.location.reload();
+        });
+      } catch (error) {
+        console.error('Error sending request:', error);
+      }
+    }
+const acceptRequest = (userId,mentorId) => {
+
+    // this.$refs.myButton.innerText = 'Button clicked';
+      // Make a request to your Laravel API to insert the request into the database
+      try {
+        axios.get(route('accept.to.become.mentor')+"?id="+userId+"&&mentor="+mentorId).then(response => {
+            // console.log(response.data.success);
+            requestData.requestSent = response.data.success ?? false;
+            window.location.reload();
         });
       } catch (error) {
         console.error('Error sending request:', error);
@@ -127,13 +144,18 @@ const reviews = {
 
                         <p class="mt-6 text-gray-800 dark:text-gray-200">{{ user.bio }}</p>
 
-                        <div v-if="user.is_mentor && is_mentor==2" class="mt-10">
+                        <div v-if="user.is_mentor && is_mentor==2 && user.id != authuser.id" class="mt-10">
                             <button type="button" @click="sendRequest(authuser.id,user.id)" class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Request to be a Mentee</button>
+                        </div>
+                        <!-- <p>{{ mine }}</p> -->
+                        <div v-if="authuser.is_mentor && mine==0" class="mt-10">
+                            <button type="button" @click="acceptRequest(user.id,authuser.id)" class="flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50">Accept Request</button>
                         </div>
 
                         <div v-if="user.is_mentor && is_mentor==0" class="mt-10">
                             <button type="button" class="flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Your Request is Pending...</button>
                         </div>
+                        <!-- <p>{{ mentor }}</p> -->
 
                         <div v-if="user.is_mentor && mentor.mentor.skills.length > 0" class="mt-10 border-t border-gray-200 pt-10">
                             <h3 class="text-sm font-medium text-gray-900 dark:text-gray-200">Skills</h3>
@@ -165,7 +187,7 @@ const reviews = {
                             </div>
                             <TabPanels as="template">
                                 <TabPanel class="text-sm text-gray-800 dark:text-gray-200" v-if="user.id == authuser.id">
-                                    <div v-if="user.is_mentor">
+                                    <!-- <div v-if="user.is_mentor">
                                         <div v-for="(session, sessionIdx) in user.mentor.sessions" :key="session.id" class="flex space-x-4 text-sm text-gray-800 dark:text-gray-200">
                                             <div class="flex-none py-10">
                                                 <img :src="session.mentee.user.avatar" alt="" class="h-10 w-10 rounded-full bg-gray-100" />
@@ -187,7 +209,7 @@ const reviews = {
                                         <div v-if="user.mentor.sessions.length == 0" class="pt-10">
                                             No upcoming mentor sessions
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- <div v-if="authuser.is_mentee">
                                         <div v-for="(session, sessionIdx) in session.sessions" :key="session.id" class="flex space-x-4 text-sm text-gray-800 dark:text-gray-200">
                                             <div class="flex-none py-10">

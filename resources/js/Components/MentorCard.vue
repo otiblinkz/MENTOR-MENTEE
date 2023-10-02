@@ -35,10 +35,10 @@ const image = props.mentor.user.avatar;
             {{ skill.name }}
           </div>
         </div>
-        <div class="mt-4 text-indigo-600 dark:text-indigo-500 leading-none">
+        <!-- <div class="mt-4 text-indigo-600 dark:text-indigo-500 leading-none">
           <span class="text-2xl font-black">USD{{ mentor.hourly_rate }}</span>
           <span class="inline font-bold text-lg">/hour</span>
-        </div>
+        </div> -->
         <Link
           :href="route('profile.show', mentor.user)"
           type="button"
